@@ -240,15 +240,15 @@ public class Tester {
         }
         if (arr[0] != b1 || arr.length > 1 && arr[1] != null) passed = false;
         assertTrue(passed);
-        passed = true;
-        arr = db.toArray();
-        foundNull = false;
         Book b2 = new Book("Tintin in America","9782203011013","Hergé");
         db.add(b2);
         Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
         db.add(b3);
         Book b4 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
         db.add(b4);
+        passed = true;
+        arr = db.toArray();
+        foundNull = false;
         for (Book b : arr) {
             if (foundNull) {
                 if (b != null) {
