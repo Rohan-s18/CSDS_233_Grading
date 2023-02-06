@@ -97,7 +97,7 @@ public class Tester {
         assertEquals(null, db.randomSelection());
         Book b1 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
         db.add(b1);
-        assertEquals(null, db.randomSelection());
+        assertEquals(b1, db.randomSelection());
         if (db.size() == 0) db.add(b1);
         db.add(new Book("Tintin in America","9782203011013","Hergé"));
         db.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
