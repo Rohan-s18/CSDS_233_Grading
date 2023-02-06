@@ -34,5 +34,210 @@ public class Tester {
     public void findTest(){
 
     }
+
+    @Test
+    public void BookTester(){
+        Book temp = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
+        assertEquals("Tintin in the Land of the Soviets", temp.getTitle());
+        assertEquals("9782203011014", temp.getISBN());
+        assertEquals("Hergé", temp.getAuthor());
+    }
+
+    @Test
+    public void dbConstructorTester(){
+        try{
+            new LibraryDatabase(-10); 
+            fail();
+        }catch(IllegalArgumentException e){
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void sizeTest(){
+        LibraryDatabase temp = new LibraryDatabase(10);
+        assertEquals(0, temp.size());
+        temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
+        temp.add(new Book("Tintin in America","9782203011013","Hergé"));
+        temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+    }
+
+    @Test
+    public void findTest(){
+
+    }
+
+    @Test
+    public void testRandomSelection(){
+        LibraryDatabase db = new LibraryDatabase(10);
+        assertEquals(null, db.randomSelection());
+        Book b1 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
+        db.add(b1);
+        assertEquals(null, db.randomSelection());
+        if (db.size() == 0) db.add(b1);
+        db.add(new Book("Tintin in America","9782203011013","Hergé"));
+        db.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        db.add(new Book("Of Mice and Men","0000000000000","Steinbeck"));
+        db.add(new Book("Charlotte's Web","2389256621023","White"));
+        db.add(new Book("Romeo and Juliet","0032852830020","Shakespeare"));
+        Book selected = db.randomSelection();
+        if (db.size() < 6){
+            db.add(selected);
+        }
+        boolean different = false;
+        for (int i = 0; i < 100; i++){
+            Book temp = db.randomSelection();
+            if (db.size() < 6){
+                db.add(temp);
+            }
+            if (temp != selected) {
+                different = true;
+                break;
+            }
+        }
+        // (1/6)^100 chance of failing this test if selection is truly random
+        assertTrue(different);
+    }
+
+    @Test
+    public void testGetAllByAuthor() {
+        LibraryDatabase db = new LibraryDatabase(10);
+        assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
+        Book b1 = new Book("Of Mice and Men","0000000000000","Steinbeck");
+        db.add(b1);
+        assertArrayEquals(new Book[]{b1}, db.getAllByAuthor("Steinbeck"));
+        Book b2 = new Book("Tintin in America","9782203011013","Hergé");
+        db.add(b2);
+        Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
+        db.add(b3);
+        Book b4 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
+        db.add(b4);
+        db.add(new Book("Charlotte's Web","2389256621023","White"));
+        Book[] bookArray = db.getAllByAuthor("Hergé");
+        boolean found2 = false;
+        boolean found3 = false;
+        boolean found4 = false;
+        for (Book b : bookArray) {
+            if (b == b2) found2 = true;
+            else if (b == b3) found3 = true;
+            else if (b == b4) found4 = true;
+        }
+        if (!found2 || !found3 || !found4 || bookArray.length != 3) {
+            fail("Fails at returning multiple books");
+        }
+        else assertTrue(true);
+        assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
+    }
+    
+    @Test
+    public void testRemoveDuplicates() {
+        LibraryDatabase db = new LibraryDatabase(5);
+        db.removeDuplicates();
+        boolean passed = true;
+        boolean foundNull = false;
+        Book[] arr = db.toArray();
+        for (Book b : arr) {
+            if (b != null) {
+                passed = false;
+                break;
+            }
+        }
+        assertTrue(passed);
+        Book b1 = new Book("Charlotte's Web","2389256621023","White");
+        db.add(b1);
+        db.removeDuplicates();
+        passed = true;
+        arr = db.toArray();
+        for (Book b : arr) {
+            if (foundNull) {
+                if (b != null) {
+                    passed = false;
+                    break;
+                }
+            }
+            else {
+                if (b == null) foundNull = true;
+            }
+        }
+        if (arr[0] != b1 || arr.length > 1 && arr[1] != null) passed = false;
+        assertTrue(passed);
+        Book b2 = new Book("Tintin in America","9782203011012","Hergé");
+        db.add(b2);
+        Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
+        db.add(b3);
+        Book b4 = new Book("Tintin in the Land of the Soviets","9782203011012","Hergé");
+        db.add(b4);
+        db.removeDuplicates();
+        passed = true;
+        foundNull = false;
+        arr = db.toArray();
+        for (Book b : arr) {
+            if (foundNull) {
+                if (b != null) {
+                    passed = false;
+                    break;
+                }
+            }
+            else {
+                if (b == null) foundNull = true;
+            }
+        }
+        if (arr[0] != b1 || arr[1] != b2 || arr.length > 2 && arr[2] != null) passed = false;
+        assertTrue(passed);
+    }
+
+    @Test
+    public void testToArray() {
+        LibraryDatabase db = new LibraryDatabase(0);
+        boolean passed = true;
+        boolean foundNull = false;
+        Book[] arr = db.toArray();
+        for (Book b : arr) {
+            if (b != null) {
+                passed = false;
+                break;
+            }
+        }
+        assertTrue(passed);
+        Book b1 = new Book("Charlotte's Web","2389256621023","White");
+        db.add(b1);
+        passed = true;
+        arr = db.toArray();
+        for (Book b : arr) {
+            if (foundNull) {
+                if (b != null) {
+                    passed = false;
+                    break;
+                }
+            }
+            else {
+                if (b == null) foundNull = true;
+            }
+        }
+        if (arr[0] != b1 || arr.length > 1 && arr[1] != null) passed = false;
+        assertTrue(passed);
+        passed = true;
+        arr = db.toArray();
+        foundNull = false;
+        Book b2 = new Book("Tintin in America","9782203011013","Hergé");
+        db.add(b2);
+        Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
+        db.add(b3);
+        Book b4 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
+        db.add(b4);
+        for (Book b : arr) {
+            if (foundNull) {
+                if (b != null) {
+                    passed = false;
+                    break;
+                }
+            }
+            else {
+                if (b == null) foundNull = true;
+            }
+        }
+        if (arr[0] != b1 || arr[1] != b3 || arr[2] != b2 || arr[3] != b4 || arr.length > 4 && arr[4] != null) passed = false;
+        assertTrue(passed);
+    }
     
 }
