@@ -21,37 +21,18 @@ public class Tester {
         }
     }
 
-    @Test
-    public void sizeTest(){
-        LibraryDatabase temp = new LibraryDatabase(10);
-        assertEquals(0, temp.size());
+    @Test 
+    public void addTest(){
+        LibraryDatabase temp = new LibraryDatabase(2); 
         temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
         temp.add(new Book("Tintin in America","9782203011013","Hergé"));
         temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        assertEquals("9782203011014", temp.findByISBN("9782203011014").getISBN());
+        assertEquals("9782203011013", temp.findByISBN("9782203011013").getISBN());
+        assertEquals("9782203011012", temp.findByISBN("9782203011012").getISBN());
+        assertEquals(3, temp.size());
     }
 
-    @Test
-    public void findTest(){
-
-    }
-
-    @Test
-    public void BookTester(){
-        Book temp = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
-        assertEquals("Tintin in the Land of the Soviets", temp.getTitle());
-        assertEquals("9782203011014", temp.getISBN());
-        assertEquals("Hergé", temp.getAuthor());
-    }
-
-    @Test
-    public void dbConstructorTester(){
-        try{
-            new LibraryDatabase(-10); 
-            fail();
-        }catch(IllegalArgumentException e){
-            assertTrue(true);
-        }
-    }
 
     @Test
     public void sizeTest(){
@@ -60,11 +41,54 @@ public class Tester {
         temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
         temp.add(new Book("Tintin in America","9782203011013","Hergé"));
         temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        assertEquals(3, temp.size());
+        temp.remove("9782203011013");
+        assertEquals(2, temp.size());
     }
 
     @Test
-    public void findTest(){
+    public void findByTitleTest(){
+        LibraryDatabase temp = new LibraryDatabase(10);
+        temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
+        temp.add(new Book("Tintin in America","9782203011013","Hergé"));
+        temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        Book book = temp.findByTitle("Tintin in America");
+        assertEquals("9782203011013", book.getISBN());
+        assertEquals("Hergé", book.getAuthor());
+        assertEquals("Tintin in America",book.getTitle());
+        assertNotNull(temp.findByTitle("Tintin in America"));
+        Book book2 = temp.findByTitle("Goo Goo Gaa Gaa");
+        assertEquals(null, book2);
 
+    }
+
+    @Test 
+    public void findByISBNTest(){
+        LibraryDatabase temp = new LibraryDatabase(10);
+        temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
+        temp.add(new Book("Tintin in America","9782203011013","Hergé"));
+        temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        Book book = temp.findByISBN("9782203011013");
+        assertEquals("9782203011013", book.getISBN());
+        assertEquals("Hergé", book.getAuthor());
+        assertEquals("Tintin in America",book.getTitle());
+        assertNotNull(temp.findByISBN("9782203011013"));
+        Book book2 = temp.findByISBN("9782203011019");
+        assertEquals(null, book2);
+    }
+
+    @Test 
+    public void removeTest(){
+        LibraryDatabase temp = new LibraryDatabase(10);
+        temp.add(new Book("Tintin in the Land of the Soviets","9782203011014","Hergé"));
+        temp.add(new Book("Tintin in America","9782203011013","Hergé"));
+        temp.add(new Book("Tintin in the Congo","9782203011012","Hergé"));
+        Book removed = temp.remove("9782203011013");
+        assertEquals("9782203011013", removed.getISBN());
+        assertEquals("Hergé", removed.getAuthor());
+        assertEquals("Tintin in America",removed.getTitle());
+        assertEquals(2, temp.size());
+        assertEquals(null, temp.findByISBN("9782203011013"));
     }
 
     @Test
