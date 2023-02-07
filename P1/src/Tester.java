@@ -14,7 +14,7 @@ public class Tester {
     @Test
     public void dbConstructorTester(){
         try{
-            LibraryDatabase temp = new LibraryDatabase(-10); 
+            new LibraryDatabase(-10); 
             fail();
         }catch(IllegalArgumentException e){
             assertTrue(true);
@@ -126,6 +126,10 @@ public class Tester {
     @Test
     public void testGetAllByAuthor() {
         LibraryDatabase db = new LibraryDatabase(10);
+        Book[] bookArray = db.getAllByAuthor("Kafka");
+        for (Book b : bookArray) {
+            if (b != null) fail("Returned array not empty");
+        }
         assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
         Book b1 = new Book("Of Mice and Men","0000000000000","Steinbeck");
         db.add(b1);
@@ -137,11 +141,13 @@ public class Tester {
         Book b4 = new Book("Tintin in the Land of the Soviets","9782203011014","Hergé");
         db.add(b4);
         db.add(new Book("Charlotte's Web","2389256621023","White"));
-        Book[] bookArray = db.getAllByAuthor("Hergé");
+        bookArray = db.getAllByAuthor("Hergé");
         boolean found2 = false;
         boolean found3 = false;
         boolean found4 = false;
+        int numBooks = 0;
         for (Book b : bookArray) {
+            if (b != null) numBooks++;
             if (b == b2) found2 = true;
             else if (b == b3) found3 = true;
             else if (b == b4) found4 = true;
@@ -149,9 +155,11 @@ public class Tester {
         if (!found2) fail("Fails to find \'Tintin in America\'");
         else if (!found3) fail("Fails to find \'Tintin in the Congo\'");
         else if (!found4) fail("Fails to find \'Tintin in the Land of the Soviets\'");
-        else if (bookArray.length != 3) fail("Returned array contains extra books");
-        else assertTrue(true);
-        assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
+        else assertTrue("Returned array contains extra books", numBooks == 3);
+        bookArray = db.getAllByAuthor("Kafka");
+        for (Book b : bookArray) {
+            if (b != null) fail("Returned array not empty");
+        }
     }
     
     @Test
