@@ -146,9 +146,10 @@ public class Tester {
             else if (b == b3) found3 = true;
             else if (b == b4) found4 = true;
         }
-        if (!found2 || !found3 || !found4 || bookArray.length != 3) {
-            fail("Fails at returning multiple books");
-        }
+        if (!found2) fail("Fails to find \'Tintin in America\'");
+        else if (!found3) fail("Fails to find \'Tintin in the Congo\'");
+        else if (!found4) fail("Fails to find \'Tintin in the Land of the Soviets\'");
+        else if (bookArray.length != 3) fail("Returned array contains extra books");
         else assertTrue(true);
         assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
     }
@@ -183,8 +184,9 @@ public class Tester {
                 if (b == null) foundNull = true;
             }
         }
-        if (arr[0] != b1 || arr.length > 1 && arr[1] != null) passed = false;
-        assertTrue(passed);
+        if (arr[0] != b1) fail("First book is not 'Charlotte's Web'");
+        else if (arr.length > 1 && arr[1] != null) fail("Too many books in database");
+        else assertTrue("Non-null elements found after null element", passed);
         Book b2 = new Book("Tintin in America","9782203011012","Hergé");
         db.add(b2);
         Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
@@ -206,8 +208,10 @@ public class Tester {
                 if (b == null) foundNull = true;
             }
         }
-        if (arr[0] != b1 || arr[1] != b2 || arr.length > 2 && arr[2] != null) passed = false;
-        assertTrue(passed);
+        if (arr[0] != b1) fail("First book is not 'Charlotte's Web'");
+        else if (arr[1] != b2) fail("Second book is not 'Tintin in America'");
+        else if (arr.length > 2 && arr[2] != null) fail("Not enough books were removed");
+        else assertTrue("Non-null elements found after null element",passed);
     }
 
     @Test
@@ -238,8 +242,9 @@ public class Tester {
                 if (b == null) foundNull = true;
             }
         }
-        if (arr[0] != b1 || arr.length > 1 && arr[1] != null) passed = false;
-        assertTrue(passed);
+        if (arr[0] != b1) fail("First element is incorrect");
+        else if (arr.length > 1 && arr[1] != null) fail("Extra elements present");
+        else assertTrue("Non-null elements found after null elements", passed);
         Book b2 = new Book("Tintin in America","9782203011013","Hergé");
         db.add(b2);
         Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
@@ -260,8 +265,12 @@ public class Tester {
                 if (b == null) foundNull = true;
             }
         }
-        if (arr[0] != b1 || arr[1] != b3 || arr[2] != b2 || arr[3] != b4 || arr.length > 4 && arr[4] != null) passed = false;
-        assertTrue(passed);
+        if (arr[0] != b1) fail("First element is incorrect");
+        else if (arr[1] != b3) fail("Second element is incorrect");
+        else if (arr[2] != b2) fail("Third element is incorrect");
+        else if (arr[3] != b4) fail("Fourth element is incorrect");
+        else if (arr.length > 4 && arr[4] != null) fail("Extra elements present");
+        else assertTrue("Non-null elements found after null elements", passed);
     }
     
 }
