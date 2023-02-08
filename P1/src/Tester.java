@@ -130,10 +130,17 @@ public class Tester {
         for (Book b : bookArray) {
             if (b != null) fail("Returned array not empty");
         }
-        assertArrayEquals(new Book[]{}, db.getAllByAuthor("Kafka"));
         Book b1 = new Book("Of Mice and Men","0000000000000","Steinbeck");
         db.add(b1);
-        assertArrayEquals(new Book[]{b1}, db.getAllByAuthor("Steinbeck"));
+        bookArray = db.getAllByAuthor("Steinbeck");
+        boolean found = false;
+        int numBooks = 0;
+        for (Book b : bookArray) {
+            if (b != null) numBooks++;
+            if (b == b1) found = true;
+        }
+        if (!found) fail("Fails to find \'Of Mice and Men\'");
+        else assertTrue("Returned array contains extra books", numBooks == 1);
         Book b2 = new Book("Tintin in America","9782203011013","Hergé");
         db.add(b2);
         Book b3 = new Book("Tintin in the Congo","9782203011012","Hergé");
@@ -145,7 +152,7 @@ public class Tester {
         boolean found2 = false;
         boolean found3 = false;
         boolean found4 = false;
-        int numBooks = 0;
+        numBooks = 0;
         for (Book b : bookArray) {
             if (b != null) numBooks++;
             if (b == b2) found2 = true;
