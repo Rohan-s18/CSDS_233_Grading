@@ -1,6 +1,11 @@
 import org.junit.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
+/* 
+ * Tests are structured such that if you pass more than half of cases in a test method, you will be given 1 point out of 25 for
+ * that test method (0 otherwise). Therefore, some edge cases can fail while still getting full credit.
+*/
 public class Tester {
     private String directory = "C:\\Users\\emile\\Desktop"; // Replace with path to folder on your PC where test files exist
 
@@ -237,28 +242,151 @@ public class Tester {
     }
 
     @Test
-    public void hashTableEmptyTester() {}
+    public void hashTableEmptyTester() {
+        HashTable<Integer> t1 = new HashTable<>();
+        Assert.assertEquals(0, t1.size());
+        HashTable<String> t2 = new HashTable<>();
+        Assert.assertEquals(0, t2.size());
+    }
 
     @Test
-    public void hashTableCapacityTester() {}
+    public void hashTableCapacityTester() {
+        HashTable<Integer> t1 = new HashTable<>(2);
+        Assert.assertEquals(0, t1.size());
+        HashTable<String> t2 = new HashTable<>(36);
+        Assert.assertEquals(0, t2.size());
+        HashTable<Math> t3 = new HashTable<>(0);
+        Assert.assertEquals(0, t3.size());
+        try {
+            new HashTable<Character>(-1);
+            Assert.fail("Allows negative table size.");
+        } catch (IllegalArgumentException e) {} // Should throw exception
+    }
 
     @Test
-    public void getTester() {}
+    public void putTester() {
+        HashTable<Integer> t1 = new HashTable<>(53);
+        t1.put("55", 55);
+        t1.put("43", 43);
+        t1.put("9", 9);
+        Assert.assertEquals(55, (int)t1.get("55"));
+        Assert.assertEquals(43, (int)t1.get("43"));
+        Assert.assertEquals(9, (int)t1.get("9"));
+        Assert.assertEquals(3, t1.size());
+    }
 
     @Test
-    public void getEdgeTester() {}
+    public void putEdgeTester() {
+        HashTable<Integer> t1 = new HashTable<>(0);
+        t1.put("55", 55);
+        Assert.assertEquals(55, (int)t1.get("55"));
+        Assert.assertEquals(1, t1.size());
+        HashTable<Integer> t2 = new HashTable<>(8);
+        for (int i = 0; i < 5; i++) {
+            t2.put((char)('a'+i*7) + "", i); // Should cause infinite loop with quadratic probing after 3 insertions
+        }
+        for (int i = 0; i < 5; i++) {
+            Assert.assertEquals(i, (int)t2.get((char)('a'+i*7) + ""));
+        }
+        Assert.assertEquals(5, t2.size());
+        HashTable<Integer> t3 = new HashTable<>(2);
+        t3.put("first key", 1);
+        t3.put("second key", 2);
+        t3.put("third key", 3); // Rehash should have been done by now
+        Assert.assertEquals(1, (int)t3.get("first key"));
+        Assert.assertEquals(2, (int)t3.get("second key"));
+        Assert.assertEquals(3, (int)t3.get("third key"));
+        Assert.assertEquals(3, t3.size());
+        HashTable<Integer> t4 = new HashTable<>(7);
+        t4.put("first key", 1);
+        t4.put("first key", 11);
+        int val = (int)t4.get("first key");
+        Assert.assertTrue(val == 11 || val == 12);
+        Assert.assertEquals(1, t4.size());
+        HashTable<String> t5 = new HashTable<>(7);
+        t5.put("first key", "initial");
+        t5.put("first key", "new");
+        Assert.assertEquals("new", t5.get("first key"));
+        Assert.assertEquals(1, t5.size());
+    }
 
     @Test
-    public void putTester() {}
+    public void getTester() {
+        HashTable<Integer> t1 = new HashTable<>(7);
+        t1.put("a", 1);
+        t1.put("b", 2);
+        t1.put("c", 3);
+        Assert.assertEquals(2, (int)t1.get("b"));
+    }
 
     @Test
-    public void putEdgeTester() {}
+    public void getEdgeTester() {
+        HashTable<Integer> t1 = new HashTable<>(0);
+        try {
+            t1.get("k");
+            Assert.fail("Allows getting of nonexistent values.");
+        } catch (NoSuchElementException e) {} // Should throw exception
+        HashTable<String> t2 = new HashTable<>(7);
+        t2.put("a", "aString");
+        Assert.assertEquals("aString", t2.get("a"));
+        t2.put("b", "bString");
+        t2.put("h", "hString"); // Collides with a in table if using hashCode function
+        Assert.assertEquals("aString", t2.get("a"));
+        Assert.assertEquals("hString", t2.get("h"));
+    }
 
     @Test
-    public void removeTester() {}
+    public void removeTester() {
+        HashTable<Integer> t1 = new HashTable<>(7);
+        t1.put("a", 1);
+        t1.put("b", 2);
+        t1.put("c", 3);
+        Assert.assertEquals(2, (int)t1.remove("b"));
+        try {
+            t1.get("b");
+            Assert.fail("Failed to remove the value.");
+        } catch (NoSuchElementException e) {}
+    }
 
     @Test
-    public void removeEdgeTester() {}
+    public void removeEdgeTester() {
+        HashTable<Integer> t1 = new HashTable<>(0);
+        try {
+            t1.remove("k");
+            Assert.fail("Allows removal from empty table.");
+        } catch (NoSuchElementException e) {} // Should throw exception
+        HashTable<String> t2 = new HashTable<>(7);
+        t2.put("a", "aString");
+        Assert.assertEquals("aString", t2.remove("a"));
+        try {
+            t2.get("a");
+            Assert.fail("Failed to remove the value.");
+        } catch (NoSuchElementException e) {}
+        HashTable<String> t3 = new HashTable<>(11);
+        t3.put("a", "aString");
+        t3.put("b", "bString");
+        t3.put("l", "lString"); // Collides with a in table if using hashCode function
+        Assert.assertEquals("aString", t3.remove("a"));
+        try {
+            t3.get("a");
+            Assert.fail("Failed to remove the value.");
+        } catch (NoSuchElementException e) {}
+        try {
+            t3.remove("h");
+            Assert.fail("Allows removal of nonexistent elements.");
+        } catch (NoSuchElementException e) {}
+        t3.put("a", "new aString");
+        Assert.assertEquals("lString", t3.remove("l"));
+        try {
+            t3.get("l");
+            Assert.fail("Failed to remove the value.");
+        } catch (NoSuchElementException e) {}
+        Assert.assertEquals("new aString", t3.remove("a"));
+        try {
+            t3.get("a");
+            Assert.fail("Failed to remove the value.");
+        } catch (NoSuchElementException e) {}
+    }
 
     @Test
     public void sizeTester() {}
