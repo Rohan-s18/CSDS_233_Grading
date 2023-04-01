@@ -112,22 +112,27 @@ public class Tester {
     }
 
     private void initializeWordStats() {
-        wF1 = new WordStat(directory + "\\test1.txt");
-        wF2 = new WordStat(directory + "\\test2.txt");
-        wF3 = new WordStat(directory + "\\test3.txt");
-        wF4 = new WordStat(directory + "\\test4.txt");
-        wF5 = new WordStat(directory + "\\test5.txt");
-        wF6 = new WordStat(directory + "\\test6.txt");
-        wF7 = new WordStat(directory + "\\test7.txt");
-        wA1 = new WordStat(new String[]{"I’m", "going", "to", "eat", "twenty-five", "pancakes."});
-        wA2 = new WordStat(new String[0]);
-        wA3 = new WordStat(new String[]{"supercalifragilisticexpialidocious"});
-        wA4 = new WordStat(new String[]{" :)", " ;)	:(", "\n", ":/"});
-        wA5 = new WordStat(new String[]{"Gdynia 10 Sopot", "", "Sopot 13 Gdańsk\nGdańsk 36 Gdynia 422 Białystok",
-        "Białystok 198 Warsaw", "Lublin 173 Warsaw", "Warsaw 340 Gdańsk 290 Kraków 136 Łódź", "Łódź 126 Częstochowa 217 Wrocław",
-        "Częstochowa 73 Katowice 258 Wrocław 126 Łódź", "Wrocław 182 Poznań", "Poznań 63 Gniezno 311 Warsaw", "Katowice"});
-        wA6 = new WordStat(new String[]{bigText});
-        wA7 = new WordStat(new String[]{"to", "be", "or", "not","to", "be", "that", "is", "the", "question"});
+        try {
+            wF1 = new WordStat(directory + "\\test1.txt");
+            wF2 = new WordStat(directory + "\\test2.txt");
+            wF3 = new WordStat(directory + "\\test3.txt");
+            wF4 = new WordStat(directory + "\\test4.txt");
+            wF5 = new WordStat(directory + "\\test5.txt");
+            wF6 = new WordStat(directory + "\\test6.txt");
+            wF7 = new WordStat(directory + "\\test7.txt");
+            wA1 = new WordStat(new String[]{"I’m", "going", "to", "eat", "twenty-five", "pancakes."});
+            wA2 = new WordStat(new String[0]);
+            wA3 = new WordStat(new String[]{"supercalifragilisticexpialidocious"});
+            wA4 = new WordStat(new String[]{" :)", " ;)	:(", "\n", ":/"});
+            wA5 = new WordStat(new String[]{"Gdynia 10 Sopot", "", "Sopot 13 Gdańsk\nGdańsk 36 Gdynia 422 Białystok",
+            "Białystok 198 Warsaw", "Lublin 173 Warsaw", "Warsaw 340 Gdańsk 290 Kraków 136 Łódź", "Łódź 126 Częstochowa 217 Wrocław",
+            "Częstochowa 73 Katowice 258 Wrocław 126 Łódź", "Wrocław 182 Poznań", "Poznań 63 Gniezno 311 Warsaw", "Katowice"});
+            wA6 = new WordStat(new String[]{bigText});
+            wA7 = new WordStat(new String[]{"to", "be", "or", "not","to", "be", "that", "is", "the", "question"});
+        }
+        catch (Exception e) {
+            Assert.fail("Error in WordStat constructor");
+        }
     }
 
     private void assertPass(int failCount, int testCount) {
@@ -136,9 +141,13 @@ public class Tester {
     
     @Test
     public void tokenizerFileTester() {
-        Tokenizer t1 = new Tokenizer(directory + "\\test1.txt");
-        testArrayPermutation(t1.wordList(), List.of(new String[]{"im", "going", "to", "eat",
-        "twentyfive", "pancakes"}));
+        try {
+            Tokenizer t1 = new Tokenizer(directory + "\\test1.txt");
+            testArrayPermutation(t1.wordList(), List.of(new String[]{"im", "going", "to", "eat",
+            "twentyfive", "pancakes"}));
+        } catch (Exception e) {
+            Assert.fail("Tokenizer throws error when it shouldn't");
+        }
     }
 
     @Test
@@ -232,7 +241,7 @@ public class Tester {
         }
         catch (Throwable e) {
             e.printStackTrace();
-            failCount += 3;
+            failCount += 2;
         }
         try {
             Tokenizer t7 = new Tokenizer(directory + "\\test7.txt");
@@ -243,7 +252,7 @@ public class Tester {
             e.printStackTrace();
             failCount++;
         }
-        assertPass(failCount, 8);
+        assertPass(failCount, 7);
     }
 
     @Test
@@ -670,13 +679,18 @@ public class Tester {
     @Test
     public void wordStatFileTester() {
         // Just checks that there are no errors
-        new WordStat(directory + "\\test1.txt");
-        new WordStat(directory + "\\test2.txt");
-        new WordStat(directory + "\\test3.txt");
-        new WordStat(directory + "\\test4.txt");
-        new WordStat(directory + "\\test5.txt");
-        new WordStat(directory + "\\test6.txt");
-        new WordStat(directory + "\\test7.txt");
+        try {
+            new WordStat(directory + "\\test1.txt");
+            new WordStat(directory + "\\test2.txt");
+            new WordStat(directory + "\\test3.txt");
+            new WordStat(directory + "\\test4.txt");
+            new WordStat(directory + "\\test5.txt");
+            new WordStat(directory + "\\test6.txt");
+            new WordStat(directory + "\\test7.txt");
+        }
+        catch (Exception e) {
+            Assert.fail("Error in WordStat constructor");
+        }
     }
 
     @Test
