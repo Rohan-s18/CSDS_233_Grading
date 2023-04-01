@@ -96,7 +96,7 @@ public class HashTable<T> {
     
         // Compares the HashEntries by value (input minus this). (Constant time)
         public int compareTo(HashEntry entry) {
-            if (value instanceof Comparable) return (Integer)entry.getValue() - (Integer)getValue();
+            if (value instanceof Integer) return (Integer)entry.getValue() - (Integer)getValue();
             return 0;
         }
     }
