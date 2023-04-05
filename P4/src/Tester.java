@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
  * that test method (0 otherwise). Therefore, some edge cases can fail while still getting full credit.
 */
 public class Tester {
+    
     private static final String directory = "C:\\Users\\emile\\Desktop"; // Replace with path to folder on your PC where test files exist
 
     private WordStat wF1;
@@ -100,7 +101,7 @@ public class Tester {
     "*\tPokemon no longer gain an extra damage boost for using moves that share a type with them";
 
     // Asserts that l1 & l2 have the same elements (without regard to order), destroying l2 in the process
-    private void testArrayPermutation(List<String> actual, List<String> expected) {
+    private static void testArrayPermutation(List<String> actual, List<String> expected) {
         ArrayList<String> l1 = new ArrayList<>();
         l1.addAll(actual);
         ArrayList<String> l2 = new ArrayList<>();
@@ -135,7 +136,7 @@ public class Tester {
         }
     }
 
-    private void assertPass(int failCount, int testCount) {
+    public static void assertPass(int failCount, int testCount) {
         Assert.assertTrue("Failed " + failCount + " tests out of " + testCount, testCount / 2 >= failCount);
     }
     
