@@ -257,7 +257,7 @@ public class Tester {
     }
 
     @Test
-    public void tokenizerArrayTester() {    
+    public void tokenizerArrayTester() throws Exception {    
         Tokenizer t1 = new Tokenizer(new String[]{"I’m", "going", "to", "eat", "twenty-five", "pancakes."});
         testArrayPermutation(t1.wordList(), List.of(new String[]{"im", "going", "to", "eat",
         "twentyfive", "pancakes"}));
@@ -445,8 +445,8 @@ public class Tester {
     @Test
     public void putEdgeTester() {
         int failCount = 0;
-        HashTable<Integer> t1 = new HashTable<>(0);
         try {
+            HashTable<Integer> t1 = new HashTable<>(0);
             t1.put("55", 55);
             Assert.assertEquals(55, (int)t1.get("55"));
             Assert.assertEquals(1, t1.size());
@@ -521,8 +521,8 @@ public class Tester {
     @Test
     public void getEdgeTester() {
         int failCount = 0;
-        HashTable<Integer> t1 = new HashTable<>(0);
         try {
+            HashTable<Integer> t1 = new HashTable<>(0);
             t1.get("k");
             Assert.fail("Allows getting of nonexistent values.");
         } catch (NoSuchElementException e) {} // Should throw exception
@@ -568,8 +568,8 @@ public class Tester {
     @Test
     public void removeEdgeTester() {
         int failCount = 0;
-        HashTable<Integer> t1 = new HashTable<>(0);
         try {
+            HashTable<Integer> t1 = new HashTable<>(0);
             t1.remove("k");
             Assert.fail("Allows removal from empty table.");
         } catch (NoSuchElementException e) {} // Should throw exception
@@ -695,7 +695,7 @@ public class Tester {
     }
 
     @Test
-    public void wordStatArrayTester() {
+    public void wordStatArrayTester() throws Exception {
         // Just checks that there are no errors
         new WordStat(new String[]{"I’m", "going", "to", "eat", "twenty-five", "pancakes."});
         new WordStat(new String[0]);
